@@ -11,21 +11,21 @@ pub extern "C" fn panic(_info: &PanicInfo) -> ! {
 }
 
 extern "C" {
-    pub fn serial_config(baud: i32);
-    pub fn serial_message(p: *const u8);
-    pub fn wait_msec(msec: i32);
+    pub fn rust_serial_config(baud: i32);
+    pub fn rust_serial_message(p: *const u8);
+    pub fn rust_wait_msec(msec: i32);
 }
 
 fn print(msg: &str) {
     unsafe {
-        serial_message(msg.as_bytes().as_ptr());
+        rust_serial_message(msg.as_bytes().as_ptr());
     }
 }
 
 #[no_mangle]
 pub extern "C" fn main_setup() -> () {
     unsafe {
-        serial_config(38400);
+        rust_serial_config(38400);
         print("Config done\n\0");
     }
 }
@@ -35,7 +35,7 @@ pub extern "C" fn main_loop() -> () {
     loop {
         unsafe {
             print("Hello from Rust!\n\0");
-            wait_msec(500);
+            rust_wait_msec(500);
         }
     }
 }
